@@ -10,9 +10,10 @@ async function bootstrap() {
     .setTitle('Ginte API')
     .setDescription('Api to manage Ginte data')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  const OpenApiSpecification = app.use(
+  app.use(
     '/scalar',
     apiReference({
       spec: {
