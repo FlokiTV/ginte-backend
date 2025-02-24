@@ -4,7 +4,7 @@ import { UpdateClientDto } from './dto/update-client.dto';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { DrizzleDB } from 'src/drizzle/types/drizzle';
 import { clients } from 'src/drizzle/schema/schema';
-import { eq } from 'drizzle-orm';
+import { eq, ilike, like, or, SQLWrapper } from 'drizzle-orm';
 
 @Injectable()
 export class ClientsService {
@@ -18,9 +18,28 @@ export class ClientsService {
     return data[0];
   }
 
-  async findAll() {
-    const data = await this.db.select().from(clients);
-    return data;
+  async findAll(query = '', page = 1) {
+    function SQL(db: DrizzleDB) {
+      return db
+        .select()
+        .from(clients)
+        .where(
+          query != ''
+            ? or(
+                like(clients.name, `%${query}%`),
+                like(clients.email, `%${query}%`),
+              )
+            : undefined,
+        );
+    }
+
+    const data = await SQL(this.db)
+      .limit(10)
+      .offset((page - 1) * 10);
+
+    const total = await this.db.$count(SQL(this.db));
+
+    return { data, total };
   }
 
   async findOne(id: number) {
