@@ -17,7 +17,7 @@ COPY --from=builder /app/package*.json ./
 RUN npm ci --omit=dev
 # only for sqlite
 COPY --from=builder /app/drizzle.config.json ./drizzle.config.json
-RUN npm i drizzle-kit && npm run db:migrate
+RUN npm i drizzle-orm drizzle-kit && npm run db:migrate
 # Run
 ENV NODE_ENV=production
 EXPOSE 3000
