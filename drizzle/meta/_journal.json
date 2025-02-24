@@ -8,6 +8,13 @@
       "when": 1740169301295,
       "tag": "0000_lucky_the_captain",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1740410523221,
+      "tag": "0001_graceful_guardian",
+      "breakpoints": true
     }
   ]
 }

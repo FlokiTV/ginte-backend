@@ -5,5 +5,6 @@ export const clients = t.sqliteTable('clients', {
   name: t.text('name'),
   email: t.text('email'),
   phone: t.text('phone'),
+  date: t.text('date'),
   address: t.text('address'),
 });
