@@ -14,7 +14,8 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package*.json ./
 RUN npm ci --omit=dev
-
+# only for sqlite
+RUN npm run db:migrate
 # Run
 ENV NODE_ENV=production
 EXPOSE 3000
