@@ -3,7 +3,8 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 COPY package*.json ./
-COPY drizzle.config.ts ./drizzle.config.ts
+# only for sqlite
+COPY database.db ./database.db
 RUN npm ci
 COPY . .
 RUN npm run build
@@ -16,8 +17,7 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package*.json ./
 RUN npm ci --omit=dev
 # only for sqlite
-COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
-RUN npm i tsx drizzle-orm drizzle-kit && npm run db:sync
+COPY --from=builder /app/database.db ./database.db
 # Run
 ENV NODE_ENV=production
 EXPOSE 3000
