@@ -3,6 +3,7 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 COPY package*.json ./
+COPY drizzle.config.json ./drizzle.config.json
 RUN npm ci
 COPY . .
 RUN npm run build
