@@ -4,7 +4,7 @@ import { UpdateClientDto } from './dto/update-client.dto';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { DrizzleDB } from 'src/drizzle/types/drizzle';
 import { clients } from 'src/drizzle/schema/schema';
-import { eq, ilike, like, or, SQLWrapper } from 'drizzle-orm';
+import { eq, ilike, inArray, like, or, SQLWrapper } from 'drizzle-orm';
 
 @Injectable()
 export class ClientsService {
@@ -64,8 +64,13 @@ export class ClientsService {
     }
   }
 
-  async remove(id: number) {
-    const data = await this.db.delete(clients).where(eq(clients.id, id));
+  async remove(ids: string[]) {
+    const data = await this.db.delete(clients).where(
+      inArray(
+        clients.id,
+        ids.map((e) => +e),
+      ),
+    );
     if (data.changes > 0) {
       return { success: true };
     } else {

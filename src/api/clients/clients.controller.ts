@@ -52,6 +52,6 @@ export class ClientsController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.clientsService.remove(+id);
+    return this.clientsService.remove(id.split(','));
   }
 }
