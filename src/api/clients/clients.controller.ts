@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { ClientsService } from './clients.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
+import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 
 @Controller('clients')
 export class ClientsController {
@@ -13,8 +23,21 @@ export class ClientsController {
   }
 
   @Get()
-  findAll() {
-    return this.clientsService.findAll();
+  @ApiQuery({
+    name: 'q',
+    required: false,
+    type: String,
+    description: 'Burcar cliente por nome ou email',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Página atual',
+    example: 1,
+  })
+  findAll(@Query('q') query?: string, @Query('page') page: number = 1) {
+    return this.clientsService.findAll(query || '', page);
   }
 
   @Get(':id')
@@ -29,6 +52,6 @@ export class ClientsController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.clientsService.remove(+id);
+    return this.clientsService.remove(id.split(','));
   }
 }
